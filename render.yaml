@@ -1,0 +1,13 @@
+# Blueprint Render — conecte o repositório no painel e use "Apply" ou crie o serviço manualmente.
+# Documentação: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: loja-custos
+    runtime: docker
+    plan: free
+    dockerfilePath: ./loja-custos/Dockerfile
+    dockerContext: ./loja-custos
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: render

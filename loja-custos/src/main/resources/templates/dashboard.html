@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Loja Custos — Painel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --accent: #0d9488;
+      --accent-2: #0f766e;
+      --danger: #dc2626;
+      --success: #059669;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(13, 148, 136, 0.12), transparent 55%),
+                  radial-gradient(900px 500px at 100% 0%, rgba(99, 102, 241, 0.08), transparent 50%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.45;
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 28px 20px 48px; }
+    header.hero {
+      display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .hero h1 { margin: 0 0 6px; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; }
+    .hero p { margin: 0; color: var(--muted); font-size: 0.95rem; max-width: 520px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border); padding: 8px 12px;
+      border-radius: 999px; font-size: 0.8rem; color: var(--muted); box-shadow: var(--shadow);
+    }
+    .badge strong { color: var(--accent-2); }
+    .flash {
+      padding: 12px 16px; border-radius: var(--radius); margin-bottom: 18px; font-size: 0.9rem;
+      border: 1px solid var(--border);
+    }
+    .flash.ok { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+    .flash.err { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+    .col-5 { grid-column: span 5; }
+    .col-7 { grid-column: span 7; }
+    @media (max-width: 960px) { .col-5, .col-7 { grid-column: span 1; } }
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 20px 22px;
+    }
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font: inherit;
+      background: #fff;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
+    }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
+    .hint { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+    }
+    .btn:hover { filter: brightness(1.03); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+    .btn-ghost:hover { background: #f8fafc; color: var(--text); }
+    .btn-danger { background: #fee2e2; color: var(--danger); box-shadow: none; border: 1px solid #fecaca; }
+    .btn-danger:hover { background: #fecaca; }
+    .stack { display: flex; flex-direction: column; gap: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .mono { font-variant-numeric: tabular-nums; }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: var(--muted);
+    }
+    .pill.kg { background: #ecfdf5; color: #047857; }
+    .pill.un { background: #eff6ff; color: #1d4ed8; }
+    .market-grid { display: grid; gap: 12px; }
+    .mp {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: linear-gradient(180deg, #fff, #fafafa);
+    }
+    .mp h3 { margin: 0 0 8px; font-size: 0.95rem; }
+    .mp small { color: var(--muted); display: block; margin-bottom: 8px; line-height: 1.35; }
+    .mp .fields { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: end; }
+    @media (max-width: 640px) { .mp .fields { grid-template-columns: 1fr; } }
+    .product-block {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+    .product-block h3 { margin: 0 0 4px; font-size: 1rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .warn { color: #b45309; font-size: 0.8rem; margin: 6px 0 0; }
+    .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+    @media (max-width: 900px) { .quotes { grid-template-columns: 1fr; } }
+    .q {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+    .q strong { display: block; font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .empty { color: var(--muted); font-size: 0.9rem; padding: 12px 0; }
+    .totals { font-size: 0.9rem; color: var(--text); }
+    .totals span { color: var(--muted); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <h1>Loja Custos</h1>
+      <p>Custo para a <strong>loja</strong> primeiro (compra + rateio operacional). Depois simulamos <strong>Mercado Livre</strong>, <strong>Shopee</strong> e <strong>TikTok Shop</strong> com taxas que você pode ajustar.</p>
+    </div>
+    <div class="badge">
+      Total operacional/mês: <strong th:text="${'R$ ' + #numbers.formatDecimal(data.totalOperationalMonthly, 1, 2)}">R$ 0,00</strong>
+    </div>
+  </header>
+
+  <div th:if="${msgSuccess}" class="flash ok" th:text="${msgSuccess}"></div>
+  <div th:if="${msgError}" class="flash err" th:text="${msgError}"></div>
+
+  <div class="grid">
+    <section class="card col-5 stack">
+      <h2>Configuração &amp; rateio</h2>
+      <form th:action="@{/configuracao}" method="post" class="stack">
+        <div>
+          <label for="allocationMode">Rateio dos custos operacionais</label>
+          <select id="allocationMode" name="allocationMode" required>
+            <option th:each="m : ${T(br.com.lojacustos.domain.AllocationMode).values()}"
+                    th:value="${m.name()}"
+                    th:selected="${m == data.settings.allocationMode}"
+                    th:text="${m.name() == 'NONE' ? 'Sem rateio no produto' : (m.name() == 'BY_TOTAL_KG' ? 'Dividir pelo total de kg vendidos no mês' : 'Dividir pelo total de unidades vendidas no mês')}">
+            </option>
+          </select>
+          <p class="hint">O rateio soma tudo que você cadastrou em “Custos operacionais” e reparte pelo denominador escolhido.</p>
+        </div>
+        <div class="row">
+          <div>
+            <label for="monthlyTotalKgSold">Kg vendidos no mês (total)</label>
+            <input id="monthlyTotalKgSold" name="monthlyTotalKgSold" inputmode="decimal"
+                   th:value="${data.settings.monthlyTotalKgSold}" placeholder="Ex.: 1200"/>
+          </div>
+          <div>
+            <label for="monthlyTotalUnitsSold">Unidades vendidas no mês (total)</label>
+            <input id="monthlyTotalUnitsSold" name="monthlyTotalUnitsSold" inputmode="decimal"
+                   th:value="${data.settings.monthlyTotalUnitsSold}" placeholder="Ex.: 3400"/>
+          </div>
+        </div>
+        <div>
+          <label for="targetMarginPercent">Margem desejada sobre o custo da loja (%)</label>
+          <input id="targetMarginPercent" name="targetMarginPercent" inputmode="decimal" required
+                 th:value="${data.settings.targetMarginPercent}" placeholder="20"/>
+          <p class="hint">Usamos para sugerir preço de venda em cada marketplace (após taxas, o líquido cobre custo + margem).</p>
+        </div>
+        <button type="submit" class="btn">Salvar configuração</button>
+      </form>
+
+      <h2 style="margin-top:18px">Custos operacionais (mês)</h2>
+      <form th:action="@{/operacional}" method="post" class="stack">
+        <div class="row">
+          <div>
+            <label for="opName">Nome</label>
+            <input id="opName" name="name" placeholder="Aluguel, luz, salários…" required/>
+          </div>
+          <div>
+            <label for="opAmt">Valor (R$)</label>
+            <input id="opAmt" name="monthlyAmount" inputmode="decimal" placeholder="0,00" required/>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-ghost">Adicionar custo</button>
+      </form>
+      <div th:if="${#lists.isEmpty(data.operationalLines)}" class="empty">Nenhum custo cadastrado ainda.</div>
+      <table th:if="${!#lists.isEmpty(data.operationalLines)}">
+        <thead><tr><th>Item</th><th>Valor</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="line : ${data.operationalLines}">
+          <td th:text="${line.name}">—</td>
+          <td class="mono" th:text="${'R$ ' + #numbers.formatDecimal(line.monthlyAmount, 1, 2)}">—</td>
+          <td>
+            <form th:action="@{'/operacional/' + ${line.id} + '/excluir'}" method="post" style="margin:0">
+              <button type="submit" class="btn btn-danger" style="padding:6px 10px;font-size:0.75rem">Excluir</button>
+            </form>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <h2 style="margin-top:18px">Taxas dos marketplaces</h2>
+      <p class="hint" style="margin-top:-8px">Valores iniciais são <strong>referência genérica</strong> — ajuste conforme seu contrato e categoria. Não existe atualização “mágica”: cada plataforma muda regras e, no geral, só dá para automatizar com API oficial / integração.</p>
+      <div class="market-grid">
+        <div class="mp" th:each="mp : ${data.marketplaces}">
+          <h3 th:text="${mp.displayName}">Marketplace</h3>
+          <small th:text="${mp.notes}">notas</small>
+          <form th:action="@{'/marketplaces/' + ${mp.id}}" method="post" class="fields">
+            <div>
+              <label th:for="${'pct-' + mp.id}">Comissão (%)</label>
+              <input th:id="${'pct-' + mp.id}" name="feePercent" inputmode="decimal"
+                     th:value="${mp.feePercent}"/>
+            </div>
+            <div>
+              <label th:for="${'fix-' + mp.id}">Taxa fixa (R$/venda)</label>
+              <input th:id="${'fix-' + mp.id}" name="fixedFeePerSale" inputmode="decimal"
+                     th:value="${mp.fixedFeePerSale}"/>
+            </div>
+            <button type="submit" class="btn" style="height:42px">Salvar</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card col-7 stack">
+      <h2>Novo produto</h2>
+      <form th:action="@{/produtos}" method="post" class="stack" id="form-produto">
+        <div>
+          <label for="pname">Nome</label>
+          <input id="pname" name="name" required placeholder="Ex.: Mix premium 1kg"/>
+        </div>
+        <div>
+          <label for="pricingMode">Como você controla o custo?</label>
+          <select id="pricingMode" name="pricingMode" required>
+            <option value="BY_KG">Por quilograma (custo R$/kg)</option>
+            <option value="BY_UNIT">Por unidade (custo R$/unidade)</option>
+          </select>
+        </div>
+        <div class="row" id="field-kg">
+          <div>
+            <label for="costPerKg">Custo para a loja (R$/kg)</label>
+            <input id="costPerKg" name="costPerKg" inputmode="decimal" placeholder="Obrigatório no modo kg"/>
+          </div>
+        </div>
+        <div class="row" id="field-unit" style="display:none">
+          <div>
+            <label for="costPerUnit">Custo para a loja (R$/unidade)</label>
+            <input id="costPerUnit" name="costPerUnit" inputmode="decimal" placeholder="Obrigatório no modo unidade"/>
+          </div>
+          <div>
+            <label for="kgPerUnit">Kg por unidade (opcional)</label>
+            <input id="kgPerUnit" name="kgPerUnit" inputmode="decimal" placeholder="Ex.: 0,5 se for pacote 500g"/>
+            <p class="hint">Obrigatório se o rateio for por <strong>kg</strong> e o produto for por <strong>unidade</strong>.</p>
+          </div>
+        </div>
+        <button type="submit" class="btn">Adicionar à lista</button>
+      </form>
+
+      <h2 style="margin-top:8px">Produtos e preços sugeridos</h2>
+      <div th:if="${#lists.isEmpty(data.rows)}" class="empty">Cadastre um produto para ver custo da loja e simulação por canal.</div>
+
+      <th:block th:each="row : ${data.rows}">
+        <article class="product-block">
+          <h3>
+            <span th:text="${row.product.name}">Produto</span>
+            <span class="pill kg" th:if="${row.product.pricingMode.name() == 'BY_KG'}">por kg</span>
+            <span class="pill un" th:if="${row.product.pricingMode.name() == 'BY_UNIT'}">por unidade</span>
+          </h3>
+          <div class="totals">
+            <span>Compra:</span>
+            <span th:if="${row.product.pricingMode.name() == 'BY_KG'}"
+                  th:text="${'R$ ' + #numbers.formatDecimal(row.product.costPerKg, 1, 2) + '/kg'}">—</span>
+            <span th:if="${row.product.pricingMode.name() == 'BY_UNIT'}"
+                  th:text="${'R$ ' + #numbers.formatDecimal(row.product.costPerUnit, 1, 2) + '/un'}">—</span>
+          </div>
+          <p class="warn" th:if="${!row.storeCost.valid}" th:text="${row.storeCost.errorMessage}">Erro</p>
+          <div class="totals" th:if="${row.storeCost.valid}">
+            <strong>Custo total para a loja (com rateio, se houver):</strong>
+            <span class="mono" th:text="${'R$ ' + #numbers.formatDecimal(row.storeCost.storeCost, 1, 2)}">—</span>
+          </div>
+          <div class="quotes" th:if="${row.storeCost.valid}">
+            <div class="q" th:each="q : ${row.marketplaceQuotes}">
+              <strong th:text="${q.marketplaceName}">ML</strong>
+              <span th:if="${q.errorMessage != null}" class="warn" th:text="${q.errorMessage}">—</span>
+              <th:block th:if="${q.errorMessage == null}">
+                <div>Sugerido: <span class="mono" th:text="${'R$ ' + #numbers.formatDecimal(q.suggestedSalePrice, 1, 2)}">—</span></div>
+                <div>Taxa est.: <span class="mono" th:text="${'R$ ' + #numbers.formatDecimal(q.estimatedTotalFee, 1, 2)}">—</span></div>
+                <div>Líquido est.: <span class="mono" th:text="${'R$ ' + #numbers.formatDecimal(q.estimatedNetAfterFees, 1, 2)}">—</span></div>
+              </th:block>
+            </div>
+          </div>
+          <form th:action="@{'/produtos/' + ${row.product.id} + '/excluir'}" method="post" style="margin-top:10px">
+            <button type="submit" class="btn btn-ghost btn-danger" style="font-size:0.8rem;padding:8px 12px">Remover produto</button>
+          </form>
+        </article>
+      </th:block>
+    </section>
+  </div>
+</div>
+<script>
+  (function () {
+    var mode = document.getElementById('pricingMode');
+    var kg = document.getElementById('field-kg');
+    var unit = document.getElementById('field-unit');
+    function sync() {
+      var v = mode.value;
+      kg.style.display = v === 'BY_KG' ? 'grid' : 'none';
+      unit.style.display = v === 'BY_UNIT' ? 'grid' : 'none';
+    }
+    mode.addEventListener('change', sync);
+    sync();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: loja-custos
+  datasource:
+    url: jdbc:h2:file:./data/loja-custos;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  web:
+    locale: pt_BR
+    locale-resolver: fixed
+
+server:
+  port: 8080
+
+loja-custos:
+  marketplace-defaults:
+    # Valores apenas para começar — SEMPRE confira no site oficial de cada marketplace.
+    mercado-livre:
+      fee-percent: 14
+      fixed-per-sale: 0
+    shopee:
+      fee-percent: 14
+      fixed-per-sale: 4
+    tiktok-shop:
+      fee-percent: 6
+      fixed-per-sale: 2
