@@ -59,7 +59,8 @@
     @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
     .col-5 { grid-column: span 5; }
     .col-7 { grid-column: span 7; }
-    @media (max-width: 960px) { .col-5, .col-7 { grid-column: span 1; } }
+    .col-12 { grid-column: span 12; }
+    @media (max-width: 960px) { .col-5, .col-7, .col-12 { grid-column: span 1; } }
     .card {
       background: var(--surface);
       border-radius: var(--radius);
@@ -164,6 +165,31 @@
     .empty { color: var(--muted); font-size: 0.9rem; padding: 12px 0; }
     .totals { font-size: 0.9rem; color: var(--text); }
     .totals span { color: var(--muted); }
+    .actions-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 6px 0 10px;
+    }
+    .report-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .report-table { min-width: 980px; font-size: 0.8rem; }
+    .report-table td, .report-table th { white-space: nowrap; }
+    .report-table td.wrap-cell { white-space: normal; min-width: 220px; }
+    .report-table .small-line { display: block; margin-bottom: 4px; }
+    .print-note { font-size: 0.78rem; color: var(--muted); margin: 0; }
+    @media print {
+      body { background: #fff; }
+      .no-print { display: none !important; }
+      .wrap { max-width: 100%; padding: 0; }
+      .card { box-shadow: none; border: none; padding: 0; }
+      .report-wrap { border: none; }
+      .report-table { min-width: 100%; font-size: 11px; }
+      .report-table td, .report-table th { padding: 6px 4px; }
+    }
   </style>
 </head>
 <body>
@@ -171,7 +197,6 @@
   <header class="hero">
     <div>
       <h1>Loja Custos</h1>
-      <p>Custo para a <strong>loja</strong> primeiro (compra + rateio operacional). Depois simulamos <strong>Mercado Livre</strong>, <strong>Shopee</strong> e <strong>TikTok Shop</strong> com taxas que você pode ajustar.</p>
     </div>
     <div class="badge">
       Total operacional/mês: <strong th:text="${'R$ ' + #numbers.formatDecimal(data.totalOperationalMonthly, 1, 2)}">R$ 0,00</strong>
@@ -182,95 +207,7 @@
   <div th:if="${msgError}" class="flash err" th:text="${msgError}"></div>
 
   <div class="grid">
-    <section class="card col-5 stack">
-      <h2>Configuração &amp; rateio</h2>
-      <form th:action="@{/configuracao}" method="post" class="stack">
-        <div>
-          <label for="allocationMode">Rateio dos custos operacionais</label>
-          <select id="allocationMode" name="allocationMode" required>
-            <option th:each="m : ${T(br.com.lojacustos.domain.AllocationMode).values()}"
-                    th:value="${m.name()}"
-                    th:selected="${m == data.settings.allocationMode}"
-                    th:text="${m.name() == 'NONE' ? 'Sem rateio no produto' : (m.name() == 'BY_TOTAL_KG' ? 'Dividir pelo total de kg vendidos no mês' : 'Dividir pelo total de unidades vendidas no mês')}">
-            </option>
-          </select>
-          <p class="hint">O rateio soma tudo que você cadastrou em “Custos operacionais” e reparte pelo denominador escolhido.</p>
-        </div>
-        <div class="row">
-          <div>
-            <label for="monthlyTotalKgSold">Kg vendidos no mês (total)</label>
-            <input id="monthlyTotalKgSold" name="monthlyTotalKgSold" inputmode="decimal"
-                   th:value="${data.settings.monthlyTotalKgSold}" placeholder="Ex.: 1200"/>
-          </div>
-          <div>
-            <label for="monthlyTotalUnitsSold">Unidades vendidas no mês (total)</label>
-            <input id="monthlyTotalUnitsSold" name="monthlyTotalUnitsSold" inputmode="decimal"
-                   th:value="${data.settings.monthlyTotalUnitsSold}" placeholder="Ex.: 3400"/>
-          </div>
-        </div>
-        <div>
-          <label for="targetMarginPercent">Margem desejada sobre o custo da loja (%)</label>
-          <input id="targetMarginPercent" name="targetMarginPercent" inputmode="decimal" required
-                 th:value="${data.settings.targetMarginPercent}" placeholder="20"/>
-          <p class="hint">Usamos para sugerir preço de venda em cada marketplace (após taxas, o líquido cobre custo + margem).</p>
-        </div>
-        <button type="submit" class="btn">Salvar configuração</button>
-      </form>
-
-      <h2 style="margin-top:18px">Custos operacionais (mês)</h2>
-      <form th:action="@{/operacional}" method="post" class="stack">
-        <div class="row">
-          <div>
-            <label for="opName">Nome</label>
-            <input id="opName" name="name" placeholder="Aluguel, luz, salários…" required/>
-          </div>
-          <div>
-            <label for="opAmt">Valor (R$)</label>
-            <input id="opAmt" name="monthlyAmount" inputmode="decimal" placeholder="0,00" required/>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-ghost">Adicionar custo</button>
-      </form>
-      <div th:if="${#lists.isEmpty(data.operationalLines)}" class="empty">Nenhum custo cadastrado ainda.</div>
-      <table th:if="${!#lists.isEmpty(data.operationalLines)}">
-        <thead><tr><th>Item</th><th>Valor</th><th></th></tr></thead>
-        <tbody>
-        <tr th:each="line : ${data.operationalLines}">
-          <td th:text="${line.name}">—</td>
-          <td class="mono" th:text="${'R$ ' + #numbers.formatDecimal(line.monthlyAmount, 1, 2)}">—</td>
-          <td>
-            <form th:action="@{'/operacional/' + ${line.id} + '/excluir'}" method="post" style="margin:0">
-              <button type="submit" class="btn btn-danger" style="padding:6px 10px;font-size:0.75rem">Excluir</button>
-            </form>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-
-      <h2 style="margin-top:18px">Taxas dos marketplaces</h2>
-      <p class="hint" style="margin-top:-8px">Valores iniciais são <strong>referência genérica</strong> — ajuste conforme seu contrato e categoria. Não existe atualização “mágica”: cada plataforma muda regras e, no geral, só dá para automatizar com API oficial / integração.</p>
-      <div class="market-grid">
-        <div class="mp" th:each="mp : ${data.marketplaces}">
-          <h3 th:text="${mp.displayName}">Marketplace</h3>
-          <small th:text="${mp.notes}">notas</small>
-          <form th:action="@{'/marketplaces/' + ${mp.id}}" method="post" class="fields">
-            <div>
-              <label th:for="${'pct-' + mp.id}">Comissão (%)</label>
-              <input th:id="${'pct-' + mp.id}" name="feePercent" inputmode="decimal"
-                     th:value="${mp.feePercent}"/>
-            </div>
-            <div>
-              <label th:for="${'fix-' + mp.id}">Taxa fixa (R$/venda)</label>
-              <input th:id="${'fix-' + mp.id}" name="fixedFeePerSale" inputmode="decimal"
-                     th:value="${mp.fixedFeePerSale}"/>
-            </div>
-            <button type="submit" class="btn" style="height:42px">Salvar</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <section class="card col-7 stack">
+    <section class="card col-12 stack">
       <h2>Novo produto</h2>
       <form th:action="@{/produtos}" method="post" class="stack" id="form-produto">
         <div>
@@ -304,44 +241,62 @@
         <button type="submit" class="btn">Adicionar à lista</button>
       </form>
 
-      <h2 id="produtos-lista" style="margin-top:8px">Produtos e preços sugeridos</h2>
+      <h2 id="produtos-lista" style="margin-top:8px">Tabela de produtos e simulação</h2>
+      <div class="actions-bar no-print">
+        <button type="button" class="btn" onclick="window.print()">Imprimir tabela</button>
+        <button type="button" class="btn btn-ghost" onclick="window.print()">Baixar em PDF</button>
+      </div>
+      <p class="print-note no-print">Para PDF, clique em "Baixar em PDF" e escolha "Salvar como PDF" na janela de impressão.</p>
       <div th:if="${#lists.isEmpty(data.rows)}" class="empty">Cadastre um produto para ver custo da loja e simulação por canal.</div>
-
-      <th:block th:each="row : ${data.rows}">
-        <article class="product-block">
-          <h3>
-            <span th:text="${row.product.name}">Produto</span>
-            <span class="pill kg" th:if="${row.product.pricingMode.name() == 'BY_KG'}">por kg</span>
-            <span class="pill un" th:if="${row.product.pricingMode.name() == 'BY_UNIT'}">por unidade</span>
-          </h3>
-          <div class="totals">
-            <span>Compra:</span>
-            <span th:if="${row.product.pricingMode.name() == 'BY_KG'}"
-                  th:text="${'R$ ' + #numbers.formatDecimal(row.product.costPerKg, 1, 2) + '/kg'}">—</span>
-            <span th:if="${row.product.pricingMode.name() == 'BY_UNIT'}"
-                  th:text="${'R$ ' + #numbers.formatDecimal(row.product.costPerUnit, 1, 2) + '/un'}">—</span>
-          </div>
-          <p class="warn" th:if="${!row.storeCost.valid}" th:text="${row.storeCost.errorMessage}">Erro</p>
-          <div class="totals" th:if="${row.storeCost.valid}">
-            <strong>Custo total para a loja (com rateio, se houver):</strong>
-            <span class="mono" th:text="${'R$ ' + #numbers.formatDecimal(row.storeCost.storeCost, 1, 2)}">—</span>
-          </div>
-          <div class="quotes" th:if="${row.storeCost.valid}">
-            <div class="q" th:each="q : ${row.marketplaceQuotes}">
-              <strong th:text="${q.marketplaceName}">ML</strong>
-              <span th:if="${q.errorMessage != null}" class="warn" th:text="${q.errorMessage}">—</span>
-              <th:block th:if="${q.errorMessage == null}">
-                <div>Sugerido: <span class="mono" th:text="${'R$ ' + #numbers.formatDecimal(q.suggestedSalePrice, 1, 2)}">—</span></div>
-                <div>Taxa est.: <span class="mono" th:text="${'R$ ' + #numbers.formatDecimal(q.estimatedTotalFee, 1, 2)}">—</span></div>
-                <div>Líquido est.: <span class="mono" th:text="${'R$ ' + #numbers.formatDecimal(q.estimatedNetAfterFees, 1, 2)}">—</span></div>
+      <div class="report-wrap" th:if="${!#lists.isEmpty(data.rows)}">
+        <table class="report-table">
+          <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Modo</th>
+            <th>Custo de compra</th>
+            <th>Custo total loja</th>
+            <th>Simulação marketplaces</th>
+            <th class="no-print">Ações</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="row : ${data.rows}">
+            <td th:text="${row.product.name}">Produto</td>
+            <td>
+              <span class="pill kg" th:if="${row.product.pricingMode.name() == 'BY_KG'}">Por kg</span>
+              <span class="pill un" th:if="${row.product.pricingMode.name() == 'BY_UNIT'}">Por unidade</span>
+            </td>
+            <td>
+              <span th:if="${row.product.pricingMode.name() == 'BY_KG'}"
+                    th:text="${'R$ ' + #numbers.formatDecimal(row.product.costPerKg, 1, 2) + '/kg'}">—</span>
+              <span th:if="${row.product.pricingMode.name() == 'BY_UNIT'}"
+                    th:text="${'R$ ' + #numbers.formatDecimal(row.product.costPerUnit, 1, 2) + '/un'}">—</span>
+            </td>
+            <td>
+              <span class="warn" th:if="${!row.storeCost.valid}" th:text="${row.storeCost.errorMessage}">Erro</span>
+              <span class="mono" th:if="${row.storeCost.valid}"
+                    th:text="${'R$ ' + #numbers.formatDecimal(row.storeCost.storeCost, 1, 2)}">—</span>
+            </td>
+            <td class="wrap-cell">
+              <th:block th:if="${row.storeCost.valid}">
+                <span class="small-line" th:each="q : ${row.marketplaceQuotes}">
+                  <strong th:text="${q.marketplaceName}">ML</strong>:
+                  <span th:if="${q.errorMessage != null}" class="warn" th:text="${q.errorMessage}">—</span>
+                  <span th:if="${q.errorMessage == null}"
+                        th:text="${'Sugerido ' + 'R$ ' + #numbers.formatDecimal(q.suggestedSalePrice, 1, 2) + ' | Taxa ' + 'R$ ' + #numbers.formatDecimal(q.estimatedTotalFee, 1, 2) + ' | Líquido ' + 'R$ ' + #numbers.formatDecimal(q.estimatedNetAfterFees, 1, 2)}">—</span>
+                </span>
               </th:block>
-            </div>
-          </div>
-          <form th:action="@{'/produtos/' + ${row.product.id} + '/excluir'}" method="post" style="margin-top:10px">
-            <button type="submit" class="btn btn-ghost btn-danger" style="font-size:0.8rem;padding:8px 12px">Remover produto</button>
-          </form>
-        </article>
-      </th:block>
+            </td>
+            <td class="no-print">
+              <form th:action="@{'/produtos/' + ${row.product.id} + '/excluir'}" method="post" style="margin:0">
+                <button type="submit" class="btn btn-ghost btn-danger" style="font-size:0.8rem;padding:8px 12px">Remover</button>
+              </form>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </div>
 </div>

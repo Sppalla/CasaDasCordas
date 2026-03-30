@@ -1,0 +1,23 @@
+Bloco pausado temporariamente da interface (solicitacao do cliente em 30/03/2026).
+Arquivo de referencia para futura reativacao no dashboard.
+
+SECAO: CONFIGURACAO & RATEIO
+- Rateio dos custos operacionais (allocationMode)
+- Kg vendidos no mes (monthlyTotalKgSold)
+- Unidades vendidas no mes (monthlyTotalUnitsSold)
+- Margem desejada sobre o custo da loja (targetMarginPercent)
+
+SECAO: CUSTOS OPERACIONAIS (MES)
+- Nome do custo operacional
+- Valor mensal
+- Lista de custos operacionais cadastrados
+- Acao de excluir linha
+
+SECAO: TAXAS DOS MARKETPLACES
+- Comissao (%)
+- Taxa fixa por venda (R$)
+- Acoes de salvar por marketplace
+
+Observacao:
+Esses campos foram removidos da exibicao principal do site e podem ser restaurados
+posteriormente a partir do historico do Git e deste resumo funcional.
