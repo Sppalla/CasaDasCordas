@@ -60,7 +60,11 @@
     .col-5 { grid-column: span 5; }
     .col-7 { grid-column: span 7; }
     .col-12 { grid-column: span 12; }
-    @media (max-width: 960px) { .col-5, .col-7, .col-12 { grid-column: span 1; } }
+    .row-form-duo { grid-column: span 12; display: grid; grid-template-columns: 5fr 7fr; gap: 18px; align-items: start; }
+    @media (max-width: 960px) {
+      .row-form-duo { grid-column: span 1; grid-template-columns: 1fr; }
+      .col-5, .col-7, .col-12 { grid-column: span 1; }
+    }
     .card {
       background: var(--surface);
       border-radius: var(--radius);
@@ -207,63 +211,69 @@
   <div th:if="${msgError}" class="flash err" th:text="${msgError}"></div>
 
   <div class="grid">
+    <div class="row-form-duo">
+      <section class="card stack">
+        <h2>Taxas dos marketplaces</h2>
+        <p class="hint" style="margin-top:-8px">Ajuste aqui as taxas usadas na simulação de preço para cada canal.</p>
+        <div class="market-grid">
+          <div class="mp" th:each="mp : ${data.marketplaces}">
+            <h3 th:text="${mp.displayName}">Marketplace</h3>
+            <small th:text="${mp.notes}">notas</small>
+            <form th:action="@{'/marketplaces/' + ${mp.id}}" method="post" class="fields">
+              <div>
+                <label th:for="${'pct-' + mp.id}">Comissão (%)</label>
+                <input th:id="${'pct-' + mp.id}" name="feePercent" inputmode="decimal"
+                       th:value="${mp.feePercent}"/>
+              </div>
+              <div>
+                <label th:for="${'fix-' + mp.id}">Taxa fixa (R$/venda)</label>
+                <input th:id="${'fix-' + mp.id}" name="fixedFeePerSale" inputmode="decimal"
+                       th:value="${mp.fixedFeePerSale}"/>
+              </div>
+              <button type="submit" class="btn" style="height:42px">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="card stack">
+        <h2>Novo produto</h2>
+        <form th:action="@{/produtos}" method="post" class="stack" id="form-produto">
+          <div>
+            <label for="pname">Nome</label>
+            <input id="pname" name="name" required placeholder="Ex.: Mix premium 1kg"/>
+          </div>
+          <div>
+            <label for="pricingMode">Como você controla o custo?</label>
+            <select id="pricingMode" name="pricingMode" required>
+              <option value="BY_KG">Por quilograma (custo R$/kg)</option>
+              <option value="BY_UNIT">Por unidade (custo R$/unidade)</option>
+            </select>
+          </div>
+          <div class="row" id="field-kg">
+            <div>
+              <label for="costPerKg">Custo para a loja (R$/kg)</label>
+              <input id="costPerKg" name="costPerKg" inputmode="decimal" placeholder="Obrigatório no modo kg"/>
+            </div>
+          </div>
+          <div class="row" id="field-unit" style="display:none">
+            <div>
+              <label for="costPerUnit">Custo para a loja (R$/unidade)</label>
+              <input id="costPerUnit" name="costPerUnit" inputmode="decimal" placeholder="Obrigatório no modo unidade"/>
+            </div>
+            <div>
+              <label for="kgPerUnit">Kg por unidade (opcional)</label>
+              <input id="kgPerUnit" name="kgPerUnit" inputmode="decimal" placeholder="Ex.: 0,5 se for pacote 500g"/>
+              <p class="hint">Obrigatório se o rateio for por <strong>kg</strong> e o produto for por <strong>unidade</strong>.</p>
+            </div>
+          </div>
+          <button type="submit" class="btn">Adicionar à lista</button>
+        </form>
+      </section>
+    </div>
+
     <section class="card col-12 stack">
-      <h2>Novo produto</h2>
-      <form th:action="@{/produtos}" method="post" class="stack" id="form-produto">
-        <div>
-          <label for="pname">Nome</label>
-          <input id="pname" name="name" required placeholder="Ex.: Mix premium 1kg"/>
-        </div>
-        <div>
-          <label for="pricingMode">Como você controla o custo?</label>
-          <select id="pricingMode" name="pricingMode" required>
-            <option value="BY_KG">Por quilograma (custo R$/kg)</option>
-            <option value="BY_UNIT">Por unidade (custo R$/unidade)</option>
-          </select>
-        </div>
-        <div class="row" id="field-kg">
-          <div>
-            <label for="costPerKg">Custo para a loja (R$/kg)</label>
-            <input id="costPerKg" name="costPerKg" inputmode="decimal" placeholder="Obrigatório no modo kg"/>
-          </div>
-        </div>
-        <div class="row" id="field-unit" style="display:none">
-          <div>
-            <label for="costPerUnit">Custo para a loja (R$/unidade)</label>
-            <input id="costPerUnit" name="costPerUnit" inputmode="decimal" placeholder="Obrigatório no modo unidade"/>
-          </div>
-          <div>
-            <label for="kgPerUnit">Kg por unidade (opcional)</label>
-            <input id="kgPerUnit" name="kgPerUnit" inputmode="decimal" placeholder="Ex.: 0,5 se for pacote 500g"/>
-            <p class="hint">Obrigatório se o rateio for por <strong>kg</strong> e o produto for por <strong>unidade</strong>.</p>
-          </div>
-        </div>
-        <button type="submit" class="btn">Adicionar à lista</button>
-      </form>
-
-      <h2 style="margin-top:18px">Taxas dos marketplaces</h2>
-      <p class="hint" style="margin-top:-8px">Ajuste aqui as taxas usadas na simulação de preço para cada canal.</p>
-      <div class="market-grid">
-        <div class="mp" th:each="mp : ${data.marketplaces}">
-          <h3 th:text="${mp.displayName}">Marketplace</h3>
-          <small th:text="${mp.notes}">notas</small>
-          <form th:action="@{'/marketplaces/' + ${mp.id}}" method="post" class="fields">
-            <div>
-              <label th:for="${'pct-' + mp.id}">Comissão (%)</label>
-              <input th:id="${'pct-' + mp.id}" name="feePercent" inputmode="decimal"
-                     th:value="${mp.feePercent}"/>
-            </div>
-            <div>
-              <label th:for="${'fix-' + mp.id}">Taxa fixa (R$/venda)</label>
-              <input th:id="${'fix-' + mp.id}" name="fixedFeePerSale" inputmode="decimal"
-                     th:value="${mp.fixedFeePerSale}"/>
-            </div>
-            <button type="submit" class="btn" style="height:42px">Salvar</button>
-          </form>
-        </div>
-      </div>
-
-      <h2 id="produtos-lista" style="margin-top:8px">Tabela de produtos e simulação</h2>
+      <h2 id="produtos-lista">Tabela de produtos e simulação</h2>
       <div class="actions-bar no-print">
         <button type="button" class="btn" onclick="window.print()">Imprimir tabela</button>
         <button type="button" class="btn btn-ghost" onclick="window.print()">Baixar em PDF</button>
