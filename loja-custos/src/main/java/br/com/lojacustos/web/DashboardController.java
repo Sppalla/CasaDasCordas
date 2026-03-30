@@ -27,6 +27,18 @@ public class DashboardController {
     return "dashboard";
   }
 
+  @GetMapping("/produtos")
+  public String productsFallback(RedirectAttributes redirect) {
+    redirect.addFlashAttribute("msgError", "Use o formulário do painel para adicionar produtos.");
+    return "redirect:/";
+  }
+
+  @GetMapping("/error")
+  public String errorFallback(RedirectAttributes redirect) {
+    redirect.addFlashAttribute("msgError", "Não encontramos essa página. Você foi redirecionado ao painel.");
+    return "redirect:/";
+  }
+
   @PostMapping("/produtos")
   public String addProduct(
       @RequestParam String name,
@@ -56,7 +68,7 @@ public class DashboardController {
     } catch (Exception e) {
       redirect.addFlashAttribute("msgError", e.getMessage() != null ? e.getMessage() : "Não foi possível salvar o produto.");
     }
-    return "redirect:/";
+    return "redirect:/#produtos-lista";
   }
 
   @PostMapping("/produtos/{id}/excluir")

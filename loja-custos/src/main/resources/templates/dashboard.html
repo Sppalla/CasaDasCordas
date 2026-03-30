@@ -9,24 +9,24 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,500&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #f6f7fb;
+      --bg: #f3f6ff;
       --surface: #ffffff;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --accent: #0d9488;
-      --accent-2: #0f766e;
+      --text: #0b1220;
+      --muted: #5f6b85;
+      --border: #dbe4ff;
+      --accent: #1d4ed8;
+      --accent-2: #f97316;
       --danger: #dc2626;
-      --success: #059669;
-      --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+      --success: #15803d;
+      --shadow: 0 2px 8px rgba(11, 18, 32, 0.08), 0 14px 36px rgba(29, 78, 216, 0.12);
       --radius: 14px;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: "DM Sans", system-ui, sans-serif;
-      background: radial-gradient(1200px 600px at 10% -10%, rgba(13, 148, 136, 0.12), transparent 55%),
-                  radial-gradient(900px 500px at 100% 0%, rgba(99, 102, 241, 0.08), transparent 50%),
+      background: radial-gradient(1200px 600px at 5% -8%, rgba(29, 78, 216, 0.16), transparent 55%),
+                  radial-gradient(900px 500px at 100% 0%, rgba(249, 115, 22, 0.16), transparent 50%),
                   var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -44,13 +44,13 @@
       background: var(--surface); border: 1px solid var(--border); padding: 8px 12px;
       border-radius: 999px; font-size: 0.8rem; color: var(--muted); box-shadow: var(--shadow);
     }
-    .badge strong { color: var(--accent-2); }
+    .badge strong { color: var(--accent); }
     .flash {
       padding: 12px 16px; border-radius: var(--radius); margin-bottom: 18px; font-size: 0.9rem;
       border: 1px solid var(--border);
     }
-    .flash.ok { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
-    .flash.err { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    .flash.ok { background: #f0fdf4; border-color: #86efac; color: #14532d; }
+    .flash.err { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
     .grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
@@ -87,7 +87,7 @@
     input:focus, select:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.2);
     }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
@@ -103,7 +103,7 @@
       cursor: pointer;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: #fff;
-      box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+      box-shadow: 0 8px 18px rgba(29, 78, 216, 0.28);
     }
     .btn:hover { filter: brightness(1.03); }
     .btn-ghost {
@@ -112,9 +112,9 @@
       border: 1px solid var(--border);
       box-shadow: none;
     }
-    .btn-ghost:hover { background: #f8fafc; color: var(--text); }
-    .btn-danger { background: #fee2e2; color: var(--danger); box-shadow: none; border: 1px solid #fecaca; }
-    .btn-danger:hover { background: #fecaca; }
+    .btn-ghost:hover { background: #eff6ff; color: var(--accent); }
+    .btn-danger { background: #fff1f2; color: var(--danger); box-shadow: none; border: 1px solid #fecdd3; }
+    .btn-danger:hover { background: #ffe4e6; }
     .stack { display: flex; flex-direction: column; gap: 10px; }
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
@@ -129,14 +129,14 @@
       background: #f1f5f9;
       color: var(--muted);
     }
-    .pill.kg { background: #ecfdf5; color: #047857; }
-    .pill.un { background: #eff6ff; color: #1d4ed8; }
+    .pill.kg { background: #eff6ff; color: #1e40af; }
+    .pill.un { background: #fff7ed; color: #c2410c; }
     .market-grid { display: grid; gap: 12px; }
     .mp {
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 12px 14px;
-      background: linear-gradient(180deg, #fff, #fafafa);
+      background: linear-gradient(180deg, #ffffff, #f8faff);
     }
     .mp h3 { margin: 0 0 8px; font-size: 0.95rem; }
     .mp small { color: var(--muted); display: block; margin-bottom: 8px; line-height: 1.35; }
@@ -150,11 +150,11 @@
       background: #fff;
     }
     .product-block h3 { margin: 0 0 4px; font-size: 1rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .warn { color: #b45309; font-size: 0.8rem; margin: 6px 0 0; }
+    .warn { color: #c2410c; font-size: 0.8rem; margin: 6px 0 0; }
     .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
     @media (max-width: 900px) { .quotes { grid-template-columns: 1fr; } }
     .q {
-      background: #f8fafc;
+      background: #f8faff;
       border-radius: 10px;
       padding: 10px;
       border: 1px solid var(--border);
@@ -304,7 +304,7 @@
         <button type="submit" class="btn">Adicionar à lista</button>
       </form>
 
-      <h2 style="margin-top:8px">Produtos e preços sugeridos</h2>
+      <h2 id="produtos-lista" style="margin-top:8px">Produtos e preços sugeridos</h2>
       <div th:if="${#lists.isEmpty(data.rows)}" class="empty">Cadastre um produto para ver custo da loja e simulação por canal.</div>
 
       <th:block th:each="row : ${data.rows}">
