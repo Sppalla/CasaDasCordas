@@ -241,6 +241,28 @@
         <button type="submit" class="btn">Adicionar à lista</button>
       </form>
 
+      <h2 style="margin-top:18px">Taxas dos marketplaces</h2>
+      <p class="hint" style="margin-top:-8px">Ajuste aqui as taxas usadas na simulação de preço para cada canal.</p>
+      <div class="market-grid">
+        <div class="mp" th:each="mp : ${data.marketplaces}">
+          <h3 th:text="${mp.displayName}">Marketplace</h3>
+          <small th:text="${mp.notes}">notas</small>
+          <form th:action="@{'/marketplaces/' + ${mp.id}}" method="post" class="fields">
+            <div>
+              <label th:for="${'pct-' + mp.id}">Comissão (%)</label>
+              <input th:id="${'pct-' + mp.id}" name="feePercent" inputmode="decimal"
+                     th:value="${mp.feePercent}"/>
+            </div>
+            <div>
+              <label th:for="${'fix-' + mp.id}">Taxa fixa (R$/venda)</label>
+              <input th:id="${'fix-' + mp.id}" name="fixedFeePerSale" inputmode="decimal"
+                     th:value="${mp.fixedFeePerSale}"/>
+            </div>
+            <button type="submit" class="btn" style="height:42px">Salvar</button>
+          </form>
+        </div>
+      </div>
+
       <h2 id="produtos-lista" style="margin-top:8px">Tabela de produtos e simulação</h2>
       <div class="actions-bar no-print">
         <button type="button" class="btn" onclick="window.print()">Imprimir tabela</button>
