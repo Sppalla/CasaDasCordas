@@ -38,7 +38,6 @@
       margin-bottom: 28px;
     }
     .hero h1 { margin: 0 0 6px; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; }
-    .hero p { margin: 0; color: var(--muted); font-size: 0.95rem; max-width: 520px; }
     .badge {
       display: inline-flex; align-items: center; gap: 6px;
       background: var(--surface); border: 1px solid var(--border); padding: 8px 12px;
@@ -57,13 +56,11 @@
       gap: 18px;
     }
     @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
-    .col-5 { grid-column: span 5; }
-    .col-7 { grid-column: span 7; }
     .col-12 { grid-column: span 12; }
     .row-form-duo { grid-column: span 12; display: grid; grid-template-columns: 5fr 7fr; gap: 18px; align-items: start; }
     @media (max-width: 960px) {
       .row-form-duo { grid-column: span 1; grid-template-columns: 1fr; }
-      .col-5, .col-7, .col-12 { grid-column: span 1; }
+      .col-12 { grid-column: span 1; }
     }
     .card {
       background: var(--surface);
@@ -121,9 +118,6 @@
     .btn-danger { background: #fff1f2; color: var(--danger); box-shadow: none; border: 1px solid #fecdd3; }
     .btn-danger:hover { background: #ffe4e6; }
     .stack { display: flex; flex-direction: column; gap: 10px; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
-    th { color: var(--muted); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; }
     .mono { font-variant-numeric: tabular-nums; }
     .pill {
       display: inline-block;
@@ -147,52 +141,71 @@
     .mp small { color: var(--muted); display: block; margin-bottom: 8px; line-height: 1.35; }
     .mp .fields { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: end; }
     @media (max-width: 640px) { .mp .fields { grid-template-columns: 1fr; } }
-    .product-block {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 12px;
-      background: #fff;
-    }
-    .product-block h3 { margin: 0 0 4px; font-size: 1rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .mp-premium-row { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
     .warn { color: #c2410c; font-size: 0.8rem; margin: 6px 0 0; }
-    .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
-    @media (max-width: 900px) { .quotes { grid-template-columns: 1fr; } }
-    .q {
-      background: #f8faff;
-      border-radius: 10px;
-      padding: 10px;
-      border: 1px solid var(--border);
-      font-size: 0.8rem;
-    }
-    .q strong { display: block; font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
     .empty { color: var(--muted); font-size: 0.9rem; padding: 12px 0; }
-    .totals { font-size: 0.9rem; color: var(--text); }
-    .totals span { color: var(--muted); }
     .actions-bar {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin: 6px 0 10px;
+      align-items: center;
     }
     .report-wrap {
       overflow-x: auto;
       border: 1px solid var(--border);
       border-radius: 12px;
     }
-    .report-table { min-width: 980px; font-size: 0.8rem; }
-    .report-table td, .report-table th { white-space: nowrap; }
-    .report-table td.wrap-cell { white-space: normal; min-width: 220px; }
-    .report-table .small-line { display: block; margin-bottom: 4px; }
+    .report-table { min-width: 1280px; font-size: 0.78rem; }
+    .report-table td, .report-table th { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .report-table th { color: var(--muted); font-weight: 600; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .report-table td.wrap-cell { white-space: normal; min-width: 200px; }
+    .chan-block { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eef2ff; }
+    .chan-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .promo-line { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+    .promo-line.ok { color: #15803d; }
+    .promo-line.bad { color: #b91c1c; }
+    .bar-compare { margin-top: 6px; }
+    .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 0.7rem; }
+    .bar-row span:first-child { width: 72px; flex-shrink: 0; color: var(--muted); }
+    .bar-track { flex: 1; height: 10px; background: #e8eeff; border-radius: 6px; overflow: hidden; }
+    .bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      min-width: 2px;
+      transition: width 0.2s ease;
+    }
+    .promo-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      background: #f8faff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .promo-strip label { margin: 0; display: inline-flex; align-items: center; gap: 8px; }
+    .promo-strip input { width: 72px; }
+    details.config-details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
     .print-note { font-size: 0.78rem; color: var(--muted); margin: 0; }
+    .check-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+    .check-row input { width: auto; }
     @media print {
       body { background: #fff; }
       .no-print { display: none !important; }
       .wrap { max-width: 100%; padding: 0; }
       .card { box-shadow: none; border: none; padding: 0; }
       .report-wrap { border: none; }
-      .report-table { min-width: 100%; font-size: 11px; }
-      .report-table td, .report-table th { padding: 6px 4px; }
+      .report-table { min-width: 100%; font-size: 10px; }
+      .report-table td, .report-table th { padding: 4px 3px; }
     }
   </style>
 </head>
@@ -211,26 +224,120 @@
   <div th:if="${msgError}" class="flash err" th:text="${msgError}"></div>
 
   <div class="grid">
+    <section class="card col-12 stack">
+      <details class="config-details" open>
+        <summary>Custos fixos, rateio e impostos</summary>
+        <p class="hint">Cadastre aluguel, internet, energia, salários etc. O rateio reparte esse total pelas vendas (kg ou unidades) e entra no <strong>custo loja</strong>. O % de imposto entra na fórmula de preço junto com comissão e margem.</p>
+        <form th:action="@{/configuracao}" method="post" class="stack">
+          <div>
+            <label for="allocationMode">Rateio dos custos operacionais</label>
+            <select id="allocationMode" name="allocationMode" required>
+              <option th:each="m : ${T(br.com.lojacustos.domain.AllocationMode).values()}"
+                      th:value="${m.name()}"
+                      th:selected="${m == data.settings.allocationMode}"
+                      th:text="${m.name() == 'NONE' ? 'Sem rateio no produto' : (m.name() == 'BY_TOTAL_KG' ? 'Dividir pelo total de kg vendidos no mês' : 'Dividir pelo total de unidades vendidas no mês')}">
+              </option>
+            </select>
+          </div>
+          <div class="row">
+            <div>
+              <label for="monthlyTotalKgSold">Kg vendidos no mês (total)</label>
+              <input id="monthlyTotalKgSold" name="monthlyTotalKgSold" inputmode="decimal"
+                     th:value="${data.settings.monthlyTotalKgSold}" placeholder="Ex.: 1200"/>
+            </div>
+            <div>
+              <label for="monthlyTotalUnitsSold">Unidades vendidas no mês (total)</label>
+              <input id="monthlyTotalUnitsSold" name="monthlyTotalUnitsSold" inputmode="decimal"
+                     th:value="${data.settings.monthlyTotalUnitsSold}" placeholder="Ex.: 3400"/>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="targetMarginPercent">Margem desejada (% do preço final)</label>
+              <input id="targetMarginPercent" name="targetMarginPercent" inputmode="decimal" required
+                     th:value="${data.settings.targetMarginPercent}" placeholder="20"/>
+            </div>
+            <div>
+              <label for="taxPercentOnInvoice">Imposto sobre a venda / NF (%)</label>
+              <input id="taxPercentOnInvoice" name="taxPercentOnInvoice" inputmode="decimal"
+                     th:value="${data.settings.taxPercentOnInvoice}" placeholder="0"/>
+            </div>
+          </div>
+          <div class="check-row">
+            <input type="checkbox" id="mlPrem" name="mercadoLivreUsePremium" value="true"
+                   th:checked="${data.settings.mercadoLivreUsePremium}"/>
+            <label for="mlPrem" style="margin:0;font-weight:500">Mercado Livre: usar taxas <strong>Premium</strong> (Classic = comissão principal acima)</label>
+          </div>
+          <button type="submit" class="btn">Salvar configuração</button>
+        </form>
+
+        <h2 style="margin-top:20px">Custos operacionais do mês</h2>
+        <form th:action="@{/operacional}" method="post" class="stack">
+          <div class="row">
+            <div>
+              <label for="opName">Nome (ex.: aluguel, internet, energia, salários)</label>
+              <input id="opName" name="name" placeholder="Descrição" required/>
+            </div>
+            <div>
+              <label for="opAmt">Valor (R$)</label>
+              <input id="opAmt" name="monthlyAmount" inputmode="decimal" placeholder="0,00" required/>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-ghost">Adicionar custo</button>
+        </form>
+        <div th:if="${#lists.isEmpty(data.operationalLines)}" class="empty">Nenhum custo cadastrado.</div>
+        <table th:if="${!#lists.isEmpty(data.operationalLines)}" style="width:100%;margin-top:10px;font-size:0.85rem">
+          <thead><tr><th>Item</th><th>Valor</th><th></th></tr></thead>
+          <tbody>
+          <tr th:each="line : ${data.operationalLines}">
+            <td th:text="${line.name}">—</td>
+            <td class="mono" th:text="${'R$ ' + #numbers.formatDecimal(line.monthlyAmount, 1, 2)}">—</td>
+            <td>
+              <form th:action="@{'/operacional/' + ${line.id} + '/excluir'}" method="post" style="margin:0">
+                <button type="submit" class="btn btn-danger" style="padding:6px 10px;font-size:0.75rem">Excluir</button>
+              </form>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </details>
+    </section>
+
     <div class="row-form-duo">
       <section class="card stack">
         <h2>Taxas dos marketplaces</h2>
-        <p class="hint" style="margin-top:-8px">Ajuste aqui as taxas usadas na simulação de preço para cada canal.</p>
+        <p class="hint" style="margin-top:-8px">Preço sugerido usa: (custo loja + taxa fixa) ÷ (1 − comissão% − imposto% − margem%). No ML, configure Classic e Premium.</p>
         <div class="market-grid">
           <div class="mp" th:each="mp : ${data.marketplaces}">
             <h3 th:text="${mp.displayName}">Marketplace</h3>
             <small th:text="${mp.notes}">notas</small>
-            <form th:action="@{'/marketplaces/' + ${mp.id}}" method="post" class="fields">
-              <div>
-                <label th:for="${'pct-' + mp.id}">Comissão (%)</label>
-                <input th:id="${'pct-' + mp.id}" name="feePercent" inputmode="decimal"
-                       th:value="${mp.feePercent}"/>
+            <form th:action="@{'/marketplaces/' + ${mp.id}}" method="post">
+              <div class="fields">
+                <div>
+                  <label th:for="${'pct-' + mp.id}">Comissão Classic (%)</label>
+                  <input th:id="${'pct-' + mp.id}" name="feePercent" inputmode="decimal"
+                         th:value="${mp.feePercent}"/>
+                </div>
+                <div>
+                  <label th:for="${'fix-' + mp.id}">Taxa fixa Classic (R$)</label>
+                  <input th:id="${'fix-' + mp.id}" name="fixedFeePerSale" inputmode="decimal"
+                         th:value="${mp.fixedFeePerSale}"/>
+                </div>
+                <button type="submit" class="btn" style="height:42px" th:unless="${mp.code == 'ML'}">Salvar</button>
               </div>
-              <div>
-                <label th:for="${'fix-' + mp.id}">Taxa fixa (R$/venda)</label>
-                <input th:id="${'fix-' + mp.id}" name="fixedFeePerSale" inputmode="decimal"
-                       th:value="${mp.fixedFeePerSale}"/>
+              <div class="mp-premium-row" th:if="${mp.code == 'ML'}">
+                <div>
+                  <label th:for="${'pctp-' + mp.id}">Comissão Premium (%)</label>
+                  <input th:id="${'pctp-' + mp.id}" name="feePercentPremium" inputmode="decimal"
+                         th:value="${mp.feePercentPremium}"/>
+                </div>
+                <div>
+                  <label th:for="${'fixp-' + mp.id}">Taxa fixa Premium (R$)</label>
+                  <input th:id="${'fixp-' + mp.id}" name="fixedFeePerSalePremium" inputmode="decimal"
+                         th:value="${mp.fixedFeePerSalePremium}"/>
+                </div>
               </div>
-              <button type="submit" class="btn" style="height:42px">Salvar</button>
+              <button type="submit" class="btn" style="margin-top:10px;width:100%" th:if="${mp.code == 'ML'}">Salvar taxas Mercado Livre</button>
             </form>
           </div>
         </div>
@@ -252,43 +359,87 @@
           </div>
           <div class="row" id="field-kg">
             <div>
-              <label for="costPerKg">Custo para a loja (R$/kg)</label>
+              <label for="costPerKg">Custo fornecedor (R$/kg)</label>
               <input id="costPerKg" name="costPerKg" inputmode="decimal" placeholder="Obrigatório no modo kg"/>
             </div>
           </div>
           <div class="row" id="field-unit" style="display:none">
             <div>
-              <label for="costPerUnit">Custo para a loja (R$/unidade)</label>
+              <label for="costPerUnit">Custo fornecedor (R$/unidade)</label>
               <input id="costPerUnit" name="costPerUnit" inputmode="decimal" placeholder="Obrigatório no modo unidade"/>
             </div>
             <div>
               <label for="kgPerUnit">Kg por unidade (opcional)</label>
-              <input id="kgPerUnit" name="kgPerUnit" inputmode="decimal" placeholder="Ex.: 0,5 se for pacote 500g"/>
+              <input id="kgPerUnit" name="kgPerUnit" inputmode="decimal" placeholder="Ex.: 0,5"/>
               <p class="hint">Obrigatório se o rateio for por <strong>kg</strong> e o produto for por <strong>unidade</strong>.</p>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="packagingCostPerSale">Embalagem / insumos (R$ por kg ou por unidade)</label>
+              <input id="packagingCostPerSale" name="packagingCostPerSale" inputmode="decimal" placeholder="0"/>
+            </div>
+            <div>
+              <label for="inboundFreightPerSale">Frete de entrada (R$ por kg ou por unidade)</label>
+              <input id="inboundFreightPerSale" name="inboundFreightPerSale" inputmode="decimal" placeholder="0"/>
             </div>
           </div>
           <button type="submit" class="btn">Adicionar à lista</button>
         </form>
+
+        <th:block th:if="${!#lists.isEmpty(data.products)}">
+          <h2 style="margin-top:18px">Ajustar embalagem / frete</h2>
+          <p class="hint">Para produtos já cadastrados.</p>
+          <form th:action="@{/produtos/logistica}" method="post" class="stack">
+            <div>
+              <label for="logProductId">Produto</label>
+              <select id="logProductId" name="productId" required>
+                <option value="" disabled selected>Selecione…</option>
+                <option th:each="p : ${data.products}" th:value="${p.id}"
+                        th:text="${p.name}">—</option>
+              </select>
+            </div>
+            <div class="row">
+              <div>
+                <label for="logPack">Embalagem (R$)</label>
+                <input id="logPack" name="packagingCostPerSale" inputmode="decimal" placeholder="0"/>
+              </div>
+              <div>
+                <label for="logFreight">Frete entrada (R$)</label>
+                <input id="logFreight" name="inboundFreightPerSale" inputmode="decimal" placeholder="0"/>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-ghost">Atualizar custos logísticos</button>
+          </form>
+        </th:block>
       </section>
     </div>
 
     <section class="card col-12 stack">
       <h2 id="produtos-lista">Tabela de produtos e simulação</h2>
+      <p class="hint">Margem de contribuição = preço − custo variável (compra+emb+frete) − comissão − taxa fixa canal − imposto. Ponto de equilíbrio = custos operacionais do mês ÷ margem de contribuição (aproxima quantas unidades cobrem o fixo da loja).</p>
+      <div class="promo-strip no-print">
+        <label for="promoPct">Simulador de promoção: desconto (%)</label>
+        <input type="number" id="promoPct" min="0" max="99" step="1" value="0"/>
+        <span class="hint" style="margin:0">Aplica sobre o preço sugerido; mostra se ainda cobre o custo variável após comissão, taxa fixa e imposto.</span>
+      </div>
       <div class="actions-bar no-print">
         <button type="button" class="btn" onclick="window.print()">Imprimir tabela</button>
         <button type="button" class="btn btn-ghost" onclick="window.print()">Baixar em PDF</button>
+        <a class="btn btn-ghost" th:href="@{/export/produtos.csv}">Baixar Excel (CSV)</a>
       </div>
-      <p class="print-note no-print">Para PDF, clique em "Baixar em PDF" e escolha "Salvar como PDF" na janela de impressão.</p>
-      <div th:if="${#lists.isEmpty(data.rows)}" class="empty">Cadastre um produto para ver custo da loja e simulação por canal.</div>
+      <p class="print-note no-print">PDF: use Imprimir → Salvar como PDF. CSV abre no Excel com separador “;”.</p>
+      <div th:if="${#lists.isEmpty(data.rows)}" class="empty">Cadastre um produto para ver simulação.</div>
       <div class="report-wrap" th:if="${!#lists.isEmpty(data.rows)}">
         <table class="report-table">
           <thead>
           <tr>
             <th>Produto</th>
             <th>Modo</th>
-            <th>Custo de compra</th>
-            <th>Custo total loja</th>
-            <th>Simulação marketplaces</th>
+            <th>Custo variável</th>
+            <th>Custo loja</th>
+            <th>Canais</th>
+            <th>Comparativo MC</th>
             <th class="no-print">Ações</th>
           </tr>
           </thead>
@@ -300,10 +451,10 @@
               <span class="pill un" th:if="${row.product.pricingMode.name() == 'BY_UNIT'}">Por unidade</span>
             </td>
             <td>
-              <span th:if="${row.product.pricingMode.name() == 'BY_KG'}"
-                    th:text="${'R$ ' + #numbers.formatDecimal(row.product.costPerKg, 1, 2) + '/kg'}">—</span>
-              <span th:if="${row.product.pricingMode.name() == 'BY_UNIT'}"
-                    th:text="${'R$ ' + #numbers.formatDecimal(row.product.costPerUnit, 1, 2) + '/un'}">—</span>
+              <span class="warn" th:if="${!row.storeCost.valid}">—</span>
+              <span class="mono" th:if="${row.storeCost.valid}"
+                    th:text="${'R$ ' + #numbers.formatDecimal(row.storeCost.variableCost, 1, 2)}">—</span>
+              <div class="hint" th:if="${row.storeCost.valid}">Compra + emb + frete (sem rateio)</div>
             </td>
             <td>
               <span class="warn" th:if="${!row.storeCost.valid}" th:text="${row.storeCost.errorMessage}">Erro</span>
@@ -312,13 +463,40 @@
             </td>
             <td class="wrap-cell">
               <th:block th:if="${row.storeCost.valid}">
-                <span class="small-line" th:each="q : ${row.marketplaceQuotes}">
-                  <strong th:text="${q.marketplaceName}">ML</strong>:
-                  <span th:if="${q.errorMessage != null}" class="warn" th:text="${q.errorMessage}">—</span>
-                  <span th:if="${q.errorMessage == null}"
-                        th:text="${'Sugerido ' + 'R$ ' + #numbers.formatDecimal(q.suggestedSalePrice, 1, 2) + ' | Taxa ' + 'R$ ' + #numbers.formatDecimal(q.estimatedTotalFee, 1, 2) + ' | Líquido ' + 'R$ ' + #numbers.formatDecimal(q.estimatedNetAfterFees, 1, 2)}">—</span>
-                </span>
+                <div class="chan-block" th:each="q : ${row.marketplaceQuotes}"
+                     th:if="${q.errorMessage == null}"
+                     th:attr="data-p=${q.suggestedSalePrice},data-var=${row.storeCost.variableCost},
+                              data-comm=${q.commissionPercentUsed},data-fix=${q.marketplaceFixedFeeUsed},
+                              data-tax=${q.taxPercentUsed}">
+                  <strong th:text="${q.marketplaceName}">ML</strong>
+                  <div>Preço: <span class="mono chan-price" th:text="${'R$ ' + #numbers.formatDecimal(q.suggestedSalePrice, 1, 2)}">—</span></div>
+                  <div class="mono" style="font-size:0.72rem;color:var(--muted)">
+                    Líq. R$ <span th:text="${#numbers.formatDecimal(q.estimatedNetAfterFees, 1, 2)}">0</span>
+                    · MC R$ <span th:text="${#numbers.formatDecimal(q.contributionMargin, 1, 2)}">0</span>
+                    (<span th:text="${#numbers.formatDecimal(q.contributionMarginPercent, 1, 2)}">0</span>%)
+                    · Markup <span th:text="${q.markup != null ? #numbers.formatDecimal(q.markup, 1, 3) : '—'}">—</span>
+                    · PE <span th:text="${q.breakEvenUnits != null ? #numbers.formatDecimal(q.breakEvenUnits, 1, 1) : '—'}">—</span>
+                    <span th:if="${row.product.pricingMode.name() == 'BY_KG'}"> kg</span>
+                    <span th:if="${row.product.pricingMode.name() == 'BY_UNIT'}"> un.</span>
+                  </div>
+                  <div class="promo-line chan-promo"></div>
+                </div>
+                <div class="chan-block" th:each="q : ${row.marketplaceQuotes}" th:if="${q.errorMessage != null}">
+                  <strong th:text="${q.marketplaceName}">ML</strong>
+                  <span class="warn" th:text="${q.errorMessage}">—</span>
+                </div>
               </th:block>
+            </td>
+            <td>
+              <div class="bar-compare" th:if="${row.storeCost.valid}">
+                <div class="bar-row" th:each="q : ${row.marketplaceQuotes}" th:if="${q.errorMessage == null}">
+                  <span th:text="${q.marketplaceName}">ML</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" th:style="|width: ${@calc.barPercent(q.contributionMargin, row.maxContributionAmongChannels)}%|"></div>
+                  </div>
+                  <span class="mono" th:text="${'R$ ' + #numbers.formatDecimal(q.contributionMargin, 1, 2)}">0</span>
+                </div>
+              </div>
             </td>
             <td class="no-print">
               <form th:action="@{'/produtos/' + ${row.product.id} + '/excluir'}" method="post" style="margin:0">
@@ -344,6 +522,45 @@
     }
     mode.addEventListener('change', sync);
     sync();
+  })();
+  (function () {
+    var input = document.getElementById('promoPct');
+    if (!input) return;
+    function run() {
+      var d = parseFloat(String(input.value).replace(',', '.')) || 0;
+      if (d < 0) d = 0;
+      if (d > 99) d = 99;
+      var factor = 1 - d / 100;
+      document.querySelectorAll('.chan-block[data-p]').forEach(function (block) {
+        var promoEl = block.querySelector('.chan-promo');
+        var priceEl = block.querySelector('.chan-price');
+        if (!promoEl || !priceEl) return;
+        var p = parseFloat(block.getAttribute('data-p'));
+        var v = parseFloat(block.getAttribute('data-var'));
+        var comm = parseFloat(block.getAttribute('data-comm')) || 0;
+        var fix = parseFloat(block.getAttribute('data-fix')) || 0;
+        var tax = parseFloat(block.getAttribute('data-tax')) || 0;
+        if (isNaN(p) || isNaN(v)) {
+          promoEl.textContent = '';
+          return;
+        }
+        var p2 = p * factor;
+        var taxAmt = p2 * (tax / 100);
+        var commAmt = p2 * (comm / 100);
+        var net = p2 - commAmt - fix - taxAmt;
+        var ok = net >= v;
+        promoEl.className = 'promo-line chan-promo ' + (ok ? 'ok' : 'bad');
+        promoEl.textContent =
+          'Com ' + d + '% off → preço R$ ' +
+          p2.toFixed(2).replace('.', ',') +
+          ' · líquido após canal/imposto R$ ' +
+          net.toFixed(2).replace('.', ',') +
+          (ok ? ' (cobre custo variável)' : ' (abaixo do custo variável)');
+      });
+    }
+    input.addEventListener('input', run);
+    input.addEventListener('change', run);
+    run();
   })();
 </script>
 </body>

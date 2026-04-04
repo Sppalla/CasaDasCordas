@@ -46,12 +46,16 @@ public class DashboardController {
       @RequestParam(required = false) String costPerKg,
       @RequestParam(required = false) String costPerUnit,
       @RequestParam(required = false) String kgPerUnit,
+      @RequestParam(required = false) String packagingCostPerSale,
+      @RequestParam(required = false) String inboundFreightPerSale,
       RedirectAttributes redirect) {
     try {
       PricingMode mode = PricingMode.valueOf(pricingMode);
       var cKg = BigDecimalParser.parseNullable(costPerKg);
       var cUnit = BigDecimalParser.parseNullable(costPerUnit);
       var kgU = BigDecimalParser.parseNullable(kgPerUnit);
+      var pack = BigDecimalParser.parseNullable(packagingCostPerSale);
+      var freight = BigDecimalParser.parseNullable(inboundFreightPerSale);
 
       if (name == null || name.isBlank()) {
         throw new IllegalArgumentException("Informe o nome do produto.");
@@ -63,10 +67,27 @@ public class DashboardController {
         throw new IllegalArgumentException("No modo por unidade, informe o custo por unidade.");
       }
 
-      dashboardService.addProduct(name, mode, cKg, cUnit, kgU);
+      dashboardService.addProduct(name, mode, cKg, cUnit, kgU, pack, freight);
       redirect.addFlashAttribute("msgSuccess", "Produto adicionado.");
     } catch (Exception e) {
       redirect.addFlashAttribute("msgError", e.getMessage() != null ? e.getMessage() : "Não foi possível salvar o produto.");
+    }
+    return "redirect:/#produtos-lista";
+  }
+
+  @PostMapping("/produtos/logistica")
+  public String updateProductLogistics(
+      @RequestParam long productId,
+      @RequestParam(required = false) String packagingCostPerSale,
+      @RequestParam(required = false) String inboundFreightPerSale,
+      RedirectAttributes redirect) {
+    try {
+      var pack = BigDecimalParser.parseNullable(packagingCostPerSale);
+      var freight = BigDecimalParser.parseNullable(inboundFreightPerSale);
+      dashboardService.updateProductLogistics(productId, pack, freight);
+      redirect.addFlashAttribute("msgSuccess", "Custos de embalagem/frete atualizados.");
+    } catch (Exception e) {
+      redirect.addFlashAttribute("msgError", e.getMessage());
     }
     return "redirect:/#produtos-lista";
   }
@@ -109,6 +130,8 @@ public class DashboardController {
       @RequestParam(required = false) String monthlyTotalKgSold,
       @RequestParam(required = false) String monthlyTotalUnitsSold,
       @RequestParam String targetMarginPercent,
+      @RequestParam(required = false) String taxPercentOnInvoice,
+      @RequestParam(required = false) String mercadoLivreUsePremium,
       RedirectAttributes redirect) {
     try {
       AllocationMode mode = AllocationMode.valueOf(allocationMode);
@@ -118,7 +141,12 @@ public class DashboardController {
       if (margin.compareTo(java.math.BigDecimal.ZERO) < 0) {
         throw new IllegalArgumentException("Margem não pode ser negativa.");
       }
-      dashboardService.updateSettings(mode, kg, units, margin);
+      var tax = BigDecimalParser.parseNullable(taxPercentOnInvoice);
+      if (tax != null && tax.compareTo(java.math.BigDecimal.ZERO) < 0) {
+        throw new IllegalArgumentException("Imposto não pode ser negativo.");
+      }
+      boolean mlPrem = "true".equalsIgnoreCase(mercadoLivreUsePremium);
+      dashboardService.updateSettings(mode, kg, units, margin, tax, mlPrem);
       redirect.addFlashAttribute("msgSuccess", "Configuração salva.");
     } catch (Exception e) {
       redirect.addFlashAttribute("msgError", e.getMessage());
@@ -131,14 +159,19 @@ public class DashboardController {
       @PathVariable long id,
       @RequestParam String feePercent,
       @RequestParam(required = false) String fixedFeePerSale,
+      @RequestParam(required = false) String feePercentPremium,
+      @RequestParam(required = false) String fixedFeePerSalePremium,
       RedirectAttributes redirect) {
     try {
       var pct = BigDecimalParser.parseRequired(feePercent, "Percentual inválido.");
       var fix = BigDecimalParser.parseNullable(fixedFeePerSale);
+      var pctPrem = BigDecimalParser.parseNullable(feePercentPremium);
+      var fixPrem = BigDecimalParser.parseNullable(fixedFeePerSalePremium);
       if (pct.compareTo(java.math.BigDecimal.ZERO) < 0) {
         throw new IllegalArgumentException("Percentual não pode ser negativo.");
       }
-      dashboardService.updateMarketplace(id, pct, fix == null ? java.math.BigDecimal.ZERO : fix);
+      dashboardService.updateMarketplace(
+          id, pct, fix == null ? java.math.BigDecimal.ZERO : fix, pctPrem, fixPrem);
       redirect.addFlashAttribute("msgSuccess", "Taxas do marketplace atualizadas.");
     } catch (Exception e) {
       redirect.addFlashAttribute("msgError", e.getMessage());

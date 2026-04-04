@@ -52,13 +52,37 @@ public class DashboardService {
 
   @Transactional
   public void addProduct(
-      String name, PricingMode mode, BigDecimal costPerKg, BigDecimal costPerUnit, BigDecimal kgPerUnit) {
+      String name,
+      PricingMode mode,
+      BigDecimal costPerKg,
+      BigDecimal costPerUnit,
+      BigDecimal kgPerUnit,
+      BigDecimal packagingCostPerSale,
+      BigDecimal inboundFreightPerSale) {
     Product p = new Product();
     p.setName(name.trim());
     p.setPricingMode(mode);
     p.setCostPerKg(costPerKg);
     p.setCostPerUnit(costPerUnit);
     p.setKgPerUnit(kgPerUnit);
+    p.setPackagingCostPerSale(
+        packagingCostPerSale == null ? java.math.BigDecimal.ZERO : packagingCostPerSale);
+    p.setInboundFreightPerSale(
+        inboundFreightPerSale == null ? java.math.BigDecimal.ZERO : inboundFreightPerSale);
+    productRepository.save(p);
+  }
+
+  @Transactional
+  public void updateProductLogistics(
+      long id, BigDecimal packagingCostPerSale, BigDecimal inboundFreightPerSale) {
+    Product p =
+        productRepository
+            .findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
+    p.setPackagingCostPerSale(
+        packagingCostPerSale == null ? java.math.BigDecimal.ZERO : packagingCostPerSale);
+    p.setInboundFreightPerSale(
+        inboundFreightPerSale == null ? java.math.BigDecimal.ZERO : inboundFreightPerSale);
     productRepository.save(p);
   }
 
@@ -85,7 +109,9 @@ public class DashboardService {
       AllocationMode allocationMode,
       BigDecimal monthlyTotalKgSold,
       BigDecimal monthlyTotalUnitsSold,
-      BigDecimal targetMarginPercent) {
+      BigDecimal targetMarginPercent,
+      BigDecimal taxPercentOnInvoice,
+      boolean mercadoLivreUsePremium) {
     AppSettings s = settingsOrDefault();
     s.setAllocationMode(allocationMode == null ? AllocationMode.NONE : allocationMode);
     s.setMonthlyTotalKgSold(monthlyTotalKgSold);
@@ -93,17 +119,27 @@ public class DashboardService {
     if (targetMarginPercent != null) {
       s.setTargetMarginPercent(targetMarginPercent);
     }
+    s.setTaxPercentOnInvoice(
+        taxPercentOnInvoice == null ? java.math.BigDecimal.ZERO : taxPercentOnInvoice);
+    s.setMercadoLivreUsePremium(mercadoLivreUsePremium);
     appSettingsRepository.save(s);
   }
 
   @Transactional
-  public void updateMarketplace(long id, BigDecimal feePercent, BigDecimal fixedPerSale) {
+  public void updateMarketplace(
+      long id,
+      BigDecimal feePercent,
+      BigDecimal fixedPerSale,
+      BigDecimal feePercentPremium,
+      BigDecimal fixedFeePerSalePremium) {
     MarketplaceProfile mp =
         marketplaceProfileRepository
             .findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Marketplace não encontrado"));
     mp.setFeePercent(feePercent == null ? BigDecimal.ZERO : feePercent);
     mp.setFixedFeePerSale(fixedPerSale == null ? BigDecimal.ZERO : fixedPerSale);
+    mp.setFeePercentPremium(feePercentPremium);
+    mp.setFixedFeePerSalePremium(fixedFeePerSalePremium);
     marketplaceProfileRepository.save(mp);
   }
 

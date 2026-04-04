@@ -29,9 +29,20 @@ public class AppSettings {
   @Column(precision = 19, scale = 4)
   private BigDecimal monthlyTotalUnitsSold;
 
-  /** Margem desejada sobre o custo total da loja (%) — usada na sugestão de preço */
+  /**
+   * Margem desejada como % do preço de venda final (denominador da fórmula: 1 − comissão − imposto −
+   * margem).
+   */
   @Column(nullable = false, precision = 9, scale = 4)
   private BigDecimal targetMarginPercent = new BigDecimal("20");
+
+  /** % de imposto incidente sobre a nota / receita (Simples, MEI, etc.) */
+  @Column(precision = 9, scale = 4)
+  private BigDecimal taxPercentOnInvoice;
+
+  /** Se true, Mercado Livre usa taxas “Premium”; senão “Classic” (campos em MarketplaceProfile). */
+  @Column(nullable = false)
+  private boolean mercadoLivreUsePremium;
 
   public Long getId() {
     return id;
@@ -71,5 +82,21 @@ public class AppSettings {
 
   public void setTargetMarginPercent(BigDecimal targetMarginPercent) {
     this.targetMarginPercent = targetMarginPercent;
+  }
+
+  public BigDecimal getTaxPercentOnInvoice() {
+    return taxPercentOnInvoice == null ? BigDecimal.ZERO : taxPercentOnInvoice;
+  }
+
+  public void setTaxPercentOnInvoice(BigDecimal taxPercentOnInvoice) {
+    this.taxPercentOnInvoice = taxPercentOnInvoice;
+  }
+
+  public boolean isMercadoLivreUsePremium() {
+    return mercadoLivreUsePremium;
+  }
+
+  public void setMercadoLivreUsePremium(boolean mercadoLivreUsePremium) {
+    this.mercadoLivreUsePremium = mercadoLivreUsePremium;
   }
 }

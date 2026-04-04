@@ -40,6 +40,14 @@ public class Product {
   @Column(precision = 19, scale = 6)
   private BigDecimal kgPerUnit;
 
+  /** Embalagem + insumos por unidade de venda (mesma base do custo: por kg ou por unidade). */
+  @Column(precision = 19, scale = 4)
+  private BigDecimal packagingCostPerSale;
+
+  /** Frete de entrada (aquisição) rateado por unidade de venda (mesma base). */
+  @Column(precision = 19, scale = 4)
+  private BigDecimal inboundFreightPerSale;
+
   public Long getId() {
     return id;
   }
@@ -86,5 +94,21 @@ public class Product {
 
   public void setKgPerUnit(BigDecimal kgPerUnit) {
     this.kgPerUnit = kgPerUnit;
+  }
+
+  public BigDecimal getPackagingCostPerSale() {
+    return packagingCostPerSale;
+  }
+
+  public void setPackagingCostPerSale(BigDecimal packagingCostPerSale) {
+    this.packagingCostPerSale = packagingCostPerSale;
+  }
+
+  public BigDecimal getInboundFreightPerSale() {
+    return inboundFreightPerSale;
+  }
+
+  public void setInboundFreightPerSale(BigDecimal inboundFreightPerSale) {
+    this.inboundFreightPerSale = inboundFreightPerSale;
   }
 }

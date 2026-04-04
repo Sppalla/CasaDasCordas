@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class MarketplaceDefaultsProperties {
 
   private Fee mercadoLivre = new Fee();
+  private Fee mercadoLivrePremium = new Fee();
   private Fee shopee = new Fee();
   private Fee tiktokShop = new Fee();
 
@@ -16,6 +17,14 @@ public class MarketplaceDefaultsProperties {
 
   public void setMercadoLivre(Fee mercadoLivre) {
     this.mercadoLivre = mercadoLivre;
+  }
+
+  public Fee getMercadoLivrePremium() {
+    return mercadoLivrePremium;
+  }
+
+  public void setMercadoLivrePremium(Fee mercadoLivrePremium) {
+    this.mercadoLivrePremium = mercadoLivrePremium;
   }
 
   public Fee getShopee() {

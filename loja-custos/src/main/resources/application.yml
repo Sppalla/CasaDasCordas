@@ -30,6 +30,9 @@ loja-custos:
     mercado-livre:
       fee-percent: 14
       fixed-per-sale: 0
+    mercado-livre-premium:
+      fee-percent: 17
+      fixed-per-sale: 0
     shopee:
       fee-percent: 14
       fixed-per-sale: 4

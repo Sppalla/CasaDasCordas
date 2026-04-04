@@ -29,6 +29,13 @@ public class MarketplaceProfile {
   @Column(nullable = false, precision = 19, scale = 4)
   private BigDecimal fixedFeePerSale = BigDecimal.ZERO;
 
+  /** Taxa % alternativa (ex.: anúncio Premium no ML); null = não configurado. */
+  @Column(precision = 9, scale = 4)
+  private BigDecimal feePercentPremium;
+
+  @Column(precision = 19, scale = 4)
+  private BigDecimal fixedFeePerSalePremium;
+
   @Column(length = 500)
   private String notes;
 
@@ -78,5 +85,21 @@ public class MarketplaceProfile {
 
   public void setNotes(String notes) {
     this.notes = notes;
+  }
+
+  public BigDecimal getFeePercentPremium() {
+    return feePercentPremium;
+  }
+
+  public void setFeePercentPremium(BigDecimal feePercentPremium) {
+    this.feePercentPremium = feePercentPremium;
+  }
+
+  public BigDecimal getFixedFeePerSalePremium() {
+    return fixedFeePerSalePremium;
+  }
+
+  public void setFixedFeePerSalePremium(BigDecimal fixedFeePerSalePremium) {
+    this.fixedFeePerSalePremium = fixedFeePerSalePremium;
   }
 }

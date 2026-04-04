@@ -35,12 +35,11 @@ public class DataInitializer implements CommandLineRunner {
 
     if (marketplaceProfileRepository.count() == 0) {
       marketplaceProfileRepository.save(
-          profile(
-              "ML",
-              "Mercado Livre",
+          mercadoLivreProfile(
               defaults.getMercadoLivre().getFeePercent(),
               defaults.getMercadoLivre().getFixedPerSale(),
-              "Referência genérica (Classic/Premium variam). Ajuste conforme seu tipo de anúncio e categoria."));
+              defaults.getMercadoLivrePremium().getFeePercent(),
+              defaults.getMercadoLivrePremium().getFixedPerSale()));
       marketplaceProfileRepository.save(
           profile(
               "SHOPEE",
@@ -56,6 +55,40 @@ public class DataInitializer implements CommandLineRunner {
               defaults.getTiktokShop().getFixedPerSale(),
               "Referência comum: % sobre o produto + possível taxa fixa em itens abaixo de certo valor; confira central do seller."));
     }
+
+    marketplaceProfileRepository
+        .findByCode("ML")
+        .ifPresent(
+            ml -> {
+              if (ml.getFeePercentPremium() == null) {
+                ml.setFeePercentPremium(
+                    nz(defaults.getMercadoLivrePremium().getFeePercent()));
+                ml.setFixedFeePerSalePremium(
+                    nz(defaults.getMercadoLivrePremium().getFixedPerSale()));
+                marketplaceProfileRepository.save(ml);
+              }
+            });
+  }
+
+  private static BigDecimal nz(BigDecimal v) {
+    return v == null ? java.math.BigDecimal.ZERO : v;
+  }
+
+  private static MarketplaceProfile mercadoLivreProfile(
+      BigDecimal pctClassic,
+      BigDecimal fixedClassic,
+      BigDecimal pctPremium,
+      BigDecimal fixedPremium) {
+    MarketplaceProfile m = new MarketplaceProfile();
+    m.setCode("ML");
+    m.setDisplayName("Mercado Livre");
+    m.setFeePercent(pctClassic == null ? BigDecimal.ZERO : pctClassic);
+    m.setFixedFeePerSale(fixedClassic == null ? BigDecimal.ZERO : fixedClassic);
+    m.setFeePercentPremium(pctPremium == null ? BigDecimal.ZERO : pctPremium);
+    m.setFixedFeePerSalePremium(fixedPremium == null ? BigDecimal.ZERO : fixedPremium);
+    m.setNotes(
+        "Classic vs Premium: use o interruptor no painel para simular o tipo de anúncio; ajuste % e taxas conforme categoria e contrato.");
+    return m;
   }
 
   private static MarketplaceProfile profile(
